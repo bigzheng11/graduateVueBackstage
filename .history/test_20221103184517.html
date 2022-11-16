@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>new document</title>
+        <meta charset="utf-8" />
+        <style></style>
+    </head>
+
+    <body>
+        <script>
+            function find(n, m) {
+                var arr = []; 
+                for (var i = 0; i < n; i++) {
+                    arr[i] = true; 
+                }
+                var total = n,
+                    index = 0,
+                    count = 0; 
+                while (total > 1) {
+                    if (arr[index] == true) {
+                        count++; 
+                        if (count == m) {
+                            count = 0; 
+                            arr[index] = false; 
+                            total--; 
+                        }
+                    }
+                    index++; 
+                    if (index == arr.length) {
+                        index = 0; 
+                    }
+                } 
+                for (var i = 0; i < arr.length; i++) {
+                    if (arr[i] == true) {
+                        return i + 1; 
+                    }
+                }
+                return -1; 
+            }
+            console.log(find(7, 2)); 
+        </script>
+    </body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Document</title>
+    </head>
+    <body>
+        <script>
+            // var n = Number(prompt("请输入一个数"));
+            function jieCheng(5) {
+                var jc = 1;
+                if (n <= 1) {
+                    return jc;
+                } else {
+                    jc = n * arguments.callee(n - 1); //自己调用自己，jc=n*(n-1)*...*jieCheng(1),jieCheng(1)返回值是1,所以也是从n一直乘到1,这里的arguments.callee()是从函数内部指向函数,就是调用当前函数,结果与jieCheng()一样
+                }
+                return jc;
+            }
+        </script>
+    </body>
+</html>
