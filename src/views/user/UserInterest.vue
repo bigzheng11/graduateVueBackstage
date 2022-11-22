@@ -1,203 +1,242 @@
 <template>
-   <div class="container" style="position: relative">
-      <div
-         style="width: 700px; height: 700px; display: inline-block"
-         id="main"
-      ></div>
-      <button @click="change">修改</button>
-      <div
-         class="card"
-         style="display: inline-block; position: absolute; left: 630px"
-      >
-         <el-row>
-            <el-col :span="8" :offset="index > 0 ? 2 : 0" style="width: 200px">
-               <el-card :body-style="{ padding: '0px' }">
-                  <img :src="user.userImg" class="image" />
-                  <div style="padding: 14px">
-                     <span>{{ user.userName }}</span>
-                     <div class="bottom clearfix">
-                        <!-- <time class="time">{{ currentDate }}</time> -->
-                       ID: <time class="time">{{ user.userID }}</time>
-                     </div>
-                  </div>
-               </el-card>
-            </el-col>
-         </el-row>
-      </div>
-   </div>
+  <div class="container" style="position: relative">
+    <div
+        style="width: 700px; height: 700px; display: inline-block"
+        id="main"
+    ></div>
+    <!--      <button @click="change">修改</button>-->
+    <div
+        class="card"
+        style="display: inline-block; position: absolute; left: 630px"
+    >
+      <el-row>
+        <el-col :span="8" :offset="index > 0 ? 2 : 0" style="width: 200px">
+          <el-card :body-style="{ padding: '0px' }">
+            <img :src="user.userImg" class="image"/>
+            <div style="padding: 14px">
+              <span>{{ user.userName }}</span>
+              <div class="bottom clearfix">
+                <!-- <time class="time">{{ currentDate }}</time> -->
+                ID:
+                <time class="time">{{ user.userID }}</time>
+              </div>
+            </div>
+          </el-card>
+        </el-col>
+      </el-row>
+    </div>
+  </div>
 </template>
- 
- <script>
+
+<script>
 export default {
-   data() {
-      return {
-         currentDate: new Date(),
+  data() {
+    return {
+      currentDate: new Date(),
 
-         //定时器
-         num: 0,
-         timer: null,
-         //用户信息
-         user: {},
+      goodsClassify: [
+        {id: 1, name: "芒果"},
+        {id: 2, name: "鱼肉"},
+        {id: 3, name: "波罗蜜"},
+        {id: 4, name: "柚子"},
+        {id: 5, name: "橙子"},
+        {id: 6, name: "猕猴桃"},
+        {id: 7, name: "苹果"},
+        {id: 8, name: "草莓"},
+        {id: 9, name: "卷心菜"},
+        {id: 10, name: "西红柿"},
+        {id: 11, name: "黄瓜"},
+        {id: 12, name: "大白菜"},
+        {id: 13, name: "西兰花"},
+        {id: 14, name: "萝卜"},
+        {id: 15, name: "生菜"},
+        {id: 16, name: "金针菇"},
+        {id: 17, name: "大葱"},
+        {id: 18, name: "韭菜"},
+        {id: 19, name: "南瓜"},
+        {id: 20, name: "空心菜"}],
+      //定时器
+      num: 0,
+      timer: null,
+      //用户信息
+      user: {},
 
-         // echarts的数据配置项
-         option: {
-            // 中间大标题
-            title: {
-               text: "用户15518745323",
-               subtext: "购买倾向图",
-               left: "center",
+      // echarts的数据配置项
+      option: {
+        // 中间大标题
+        title: {
+          text: "用户15518745323",
+          subtext: "购买倾向图",
+          left: "center",
+        },
+        tooltip: {
+          trigger: "item",
+        },
+        legend: {
+          orient: "vertical",
+          left: "left",
+        },
+        series: [
+          {
+            name: "Access From",
+            type: "pie",
+            radius: "50%",
+            data: [],
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: "rgba(0, 0, 0, 0.5)",
+              },
             },
-            tooltip: {
-               trigger: "item",
-            },
-            legend: {
-               orient: "vertical",
-               left: "left",
-            },
-            series: [
-               {
-                  name: "Access From",
-                  type: "pie",
-                  radius: "50%",
-                  data: [],
-                  emphasis: {
-                     itemStyle: {
-                        shadowBlur: 10,
-                        shadowOffsetX: 0,
-                        shadowColor: "rgba(0, 0, 0, 0.5)",
-                     },
-                  },
-               },
-            ],
-         },
-      };
-   },
+          },
+        ],
+      },
+    };
+  },
 
-   created() {
-      console.log("获取的userID", this.$route.query.userID);
+  created() {
+    // console.log("获取的userID", this.$route.query.userID);
 
-      //获取用户信息:
+    //获取用户信息:
+    this.$axios
+        .get("/api/user/detail/" + this.$route.query.userID)
+        .then((response) => {
+          // console.log(response.data);
+          this.user = response.data;
+          this.option.title.text = "用户:" + response.data.userName;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+    this.$axios
+        .get("/api/interest/backstage/15518745323")
+        .then((response) => {
+          let temp = {};
+          for (const item of response.data) {
+
+            for (const goodsClassifyItem of this.goodsClassify) {
+              if(goodsClassifyItem.id==item.goodsClassify){
+                temp.name=goodsClassifyItem.name
+              }
+            }
+            temp.value = item.gradeY;
+            this.option.series[0].data.push(temp);
+            temp = {};
+          }
+          var chartDom = document.getElementById("main");
+          var myChart = this.$echarts.init(chartDom);
+          this.option && myChart.setOption(this.option);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+    // 实现轮询
+    this.timer = window.setInterval(() => {
+      setTimeout(this.getProjectList(), 0);
+    }, 1000);
+  },
+
+  mounted() {
+    var chartDom = document.getElementById("main");
+    var myChart = this.$echarts.init(chartDom);
+    this.option && myChart.setOption(this.option);
+  },
+
+  methods: {
+    //查询
+    stop() {
+      clearInterval(this.timer);
+      this.timer = null;
+    },
+
+    // 请求是否有新消息
+    getProjectList() {
+      console.log("请求" + this.num++ + "次");
       this.$axios
-         .get("/api/user/detail/" + this.$route.query.userID)
-         .then((response) => {
+          .get("/api/interest/backstage/15518745323")
+          .then((response) => {
             console.log(response.data);
-            this.user = response.data;
-            this.option.title.text = "用户:" + response.data.userName;
-         })
-         .catch((error) => {
-            console.log(error);
-         });
-
-      this.$axios
-         .get("/api/interest/backstage/15518745323")
-         .then((response) => {
-            console.log(response.data);
+            this.option.series[0].data = [];
             let temp = {};
             for (const item of response.data) {
-               temp.name = item.goodsClassify;
-               temp.value = item.grade;
-               this.option.series[0].data.push(temp);
-               temp = {};
+
+              for (const goodsClassifyItem of this.goodsClassify) {
+                if(goodsClassifyItem.id==item.goodsClassify){
+                  temp.name=goodsClassifyItem.name
+                }
+              }
+
+              temp.value = item.gradeY;
+              console.log("temp", temp)
+              this.option.series[0].data.push(temp);
+              temp = {};
             }
+            console.log("option", this.option)
             var chartDom = document.getElementById("main");
             var myChart = this.$echarts.init(chartDom);
             this.option && myChart.setOption(this.option);
-         })
-         .catch((error) => {
-            console.log(error);
-         });
+          })
+          .catch((error) => {
+            console.log(error)
+          });
 
-      // 实现轮询
-      this.timer = window.setInterval(() => {
-         setTimeout(this.getProjectList(), 0);
-      }, 1000);
-   },
+      //TODO: if (this.num == 180) {
 
-   mounted() {
-      var chartDom = document.getElementById("main");
-      var myChart = this.$echarts.init(chartDom);
-      this.option && myChart.setOption(this.option);
-   },
+      if (this.num == 2) {
+        this.stop();
+      }
+    },
 
-   methods: {
-      //查询
-      stop() {
-         clearInterval(this.timer);
-         this.timer = null;
-      },
+    // change() {
+    //    // 修改数据
+    //    this.option.series[0].data[0].value += 10;
+    //    //  页面更新
+    //    var chartDom = document.getElementById("main");
+    //    var myChart = this.$echarts.init(chartDom);
+    //    this.option && myChart.setOption(this.option);
+    // },
+  },
 
-      // 请求是否有新消息
-      getProjectList() {
-         console.log("请求" + this.num++ + "次");
-         this.$axios
-            .get("/api/interest/backstage/15518745323")
-            .then((response) => {
-               console.log(response.data);
-               this.option.series[0].data = [];
-               let temp = {};
-               for (const item of response.data) {
-                  temp.name = item.goodsClassify;
-                  temp.value = item.grade;
-                  this.option.series[0].data.push(temp);
-                  temp = {};
-               }
-               var chartDom = document.getElementById("main");
-               var myChart = this.$echarts.init(chartDom);
-               this.option && myChart.setOption(this.option);
-            })
-            .catch((error) => {});
-         if (this.num == 180) {
-            this.stop();
-         }
-      },
-
-      change() {
-         // 修改数据
-         this.option.series[0].data[0].value += 10;
-         //  页面更新
-         var chartDom = document.getElementById("main");
-         var myChart = this.$echarts.init(chartDom);
-         this.option && myChart.setOption(this.option);
-      },
-   },
-
-   destroyed() {
-      //离开页面是销毁
-      clearInterval(this.timer);
-      this.timer = null;
-   },
+  destroyed() {
+    //离开页面是销毁
+    clearInterval(this.timer);
+    this.timer = null;
+  },
 };
 </script>
- 
- <style scoped>
+
+<style scoped>
 /* 卡片 */
 .time {
-   font-size: 13px;
-   color: #999;
+  font-size: 13px;
+  color: #999;
 }
 
 .bottom {
-   margin-top: 13px;
-   line-height: 12px;
+  margin-top: 13px;
+  line-height: 12px;
 }
 
 .button {
-   padding: 0;
-   float: right;
+  padding: 0;
+  float: right;
 }
 
 .image {
-   width: 100%;
-   display: block;
+  width: 100%;
+  display: block;
 }
 
 .clearfix:before,
 .clearfix:after {
-   display: table;
-   content: "";
+  display: table;
+  content: "";
 }
 
 .clearfix:after {
-   clear: both;
+  clear: both;
 }
 </style>
