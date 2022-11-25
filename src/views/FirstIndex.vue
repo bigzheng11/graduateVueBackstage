@@ -131,46 +131,7 @@ export default {
       role: '超级管理员',
       options: {
         type: 'bar',
-        title: {
-          text: '最近一周各品类销售图'
-        },
         xRorate: 25,
-        labels: ['周一', '周二', '周三', '周四', '周五'],
-        datasets: [
-          {
-            label: '家电',
-            data: [234, 278, 270, 190, 230]
-          },
-          {
-            label: '百货',
-            data: [164, 178, 190, 135, 160]
-          },
-          {
-            label: '食品',
-            data: [144, 198, 150, 235, 120]
-          }
-        ]
-      },
-      options2: {
-        type: 'line',
-        title: {
-          text: '最近几个月各品类销售趋势图'
-        },
-        labels: ['6月', '7月', '8月', '9月', '10月'],
-        datasets: [
-          {
-            label: '家电',
-            data: [234, 278, 270, 190, 230]
-          },
-          {
-            label: '百货',
-            data: [164, 178, 150, 135, 160]
-          },
-          {
-            label: '食品',
-            data: [74, 118, 200, 235, 90]
-          }
-        ]
       },
       todoList: [
         {
@@ -203,13 +164,14 @@ export default {
 
   created() {
     // 获取首页信息
+    console.log("indexFirst发送请求")
     this.$axios
         .get("/api/interest/backstageIndexAll")
         .then((response) => {
+          console.log(response.data);
           this.userSize=response.data[0]
           this.messageSize=response.data[1]
           this.goodsSize=response.data[2]
-          console.log(response.data);
           //     userSize:0,
           //     messageSize:0,
           //     goodsSize:0,

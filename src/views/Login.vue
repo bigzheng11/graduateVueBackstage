@@ -92,8 +92,11 @@ export default {
 
               if (this.loginForm.username == "15518745323") {
                 if (this.loginForm.password == "123") {
-                  this.open2()
-                  this.$router.push("/index");
+                  setTimeout(()=>{
+                    this.$router.push("/index");
+                    this.open2()
+                  },1000)
+
                 } else {
                   //  密码错误
                   this.open4("密码错误!!!!")

@@ -16,12 +16,12 @@
          </li>
 
          <li class="user">
-            <el-dropdown trigger="click">
+            <el-dropdown trigger="click" @command="cancel">
                <span class="el-dropdown-link" style="color: black">
                   登录用户<i class="el-icon-caret-bottom el-icon--right"></i>
                </span>
                <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item>退出</el-dropdown-item>
+                  <el-dropdown-item >退出</el-dropdown-item>
                </el-dropdown-menu>
             </el-dropdown>
          </li>
@@ -38,9 +38,17 @@ export default {
       };
    },
    methods: {
+     open4(msg) {
+       this.$message.error(msg);
+     },
       handleSelect(key, keyPath) {
          console.log(key, keyPath);
       },
+     cancel(){
+       setTimeout(()=>{this.$router.push("/")
+       this.open4("注销成功")
+       },1000)
+     }
    },
 };
 </script>
