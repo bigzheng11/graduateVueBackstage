@@ -114,6 +114,26 @@ export default {
         .get("/api/interest/backstage/15518745323")
         .then((response) => {
           let temp = {};
+
+
+
+          /*
+          *
+          *
+          *
+          *
+          let temp = {};
+          for (const item of response.data) {
+           temp.name=item.name
+            temp.value = item.gradeY;
+            this.option.series[0].data.push(temp);
+            temp = {};
+          }
+          *
+          *
+          * */
+
+
           for (const item of response.data) {
 
             for (const goodsClassifyItem of this.goodsClassify) {

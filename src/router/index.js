@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Login from "../views/Login";
 import Index from "../views/Index";
+import FirstIndex from "../views/FirstIndex";
 import UserList from "../views/user/UserList";
 import UserDetail from "../views/user/UserDetail";
 import UserInterest from "../views/user/UserInterest";
@@ -20,7 +21,13 @@ const routes = [
         path: "/index",
         name: "Index",
         component: Index,
+        redirect:'index/FirstIndex',
         children: [
+            {
+                name: "首页",
+                path: "FirstIndex",
+                component: FirstIndex,
+            },
             {
                 name: "用户Eacharts总览",
                 path: "userList",

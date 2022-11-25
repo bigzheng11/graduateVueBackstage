@@ -4,7 +4,9 @@
 <template>
     <el-menu default-active="/testManagement" class="el-menu-vertical-demo" router>
 
-    <el-submenu index="1">
+      <el-menu-item index="/index/FirstIndex"><i class="el-icon-menu"></i>首页</el-menu-item>
+
+      <el-submenu index="1">
       <template slot="title"><i class="el-icon-message"></i>用户管理</template>
       <el-menu-item-group>
         <el-menu-item index="/index/UserDetail">测试区域</el-menu-item>
